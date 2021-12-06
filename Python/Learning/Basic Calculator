@@ -1,0 +1,57 @@
+import operator
+def userSpaceRemover5000(x):
+    if " " in x:
+        x = x.replace(' ','')
+        return x
+    else:
+        return x
+def userInputNumberValidator5000(x):
+    validOperator = ["+","-","/","*","^","x"]
+    if any(validOperator in x for validOperator in validOperator) == True:
+        x = x.replace('-','+')
+        x = x.replace('/','+')
+        x = x.replace('*','+')
+        x = x.replace('^','+')
+        x = x.replace('x','+')
+        try:
+            num1, num2 = map(str, x.split('+'))
+            num1 = float(num1)
+            num2 = float(num2)
+            return True
+        except:
+            return False
+    else:
+        return False
+def userOperatorAssigner5000(x):
+    operatorAssignments = {"+":operator.add,"-":operator.sub,"*":operator.mul
+                           ,"/":operator.truediv,"^":operator.pow
+                           ,"x":operator.mul}
+    for unassigned in x:
+        if unassigned in operatorAssignments:
+            break
+    return operatorAssignments[unassigned]
+def userInputNum1(x):
+    x = x.replace('-','+')
+    x = x.replace('/','+')
+    x = x.replace('*','+')
+    x = x.replace('^','+')
+    x = x.replace('x','+')
+    num1, num2 = map(float, x.split('+'))
+    return num1
+def userInputNum2(x):
+    x = x.replace('-','+')
+    x = x.replace('/','+')
+    x = x.replace('*','+')
+    x = x.replace('^','+')
+    x = x.replace('x','+')
+    num1, num2 = map(float, x.split('+'))
+    return num2
+result = 0
+while result == 0:
+    userInput = userSpaceRemover5000(input("Please provide a calculation: "))
+    while userInputNumberValidator5000(userInput) == False:
+        userInput = input("This input is invalid, please try again: ")
+    userOperator = userOperatorAssigner5000(userInput)
+    userNum1 = userInputNum1(userInput)
+    userNum2 = userInputNum2(userInput)
+    print(userOperator(userNum1,userNum2))
