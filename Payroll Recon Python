@@ -24,6 +24,17 @@ dfCompare["Amount Difference"] = (dfCompare["MOF_Amount_x"] + dfCompare["Submiss
 #dfCompare columns: Submission_ID	Pay_Period	Member_ID	Contribution_Type	
 #Submission_Type_x	Submission_Amount_x	MOF_Amount_x	Effective_Date	Submission_Type_y	
 #Submission_Amount_y	MOF_Amount_y	Amount Difference	Both Spreadsheets
+#Submission_Amount
+rawRecordkeeping = pd.read_csv(r"C:\Users\khaaa\OneDrive\Desktop\Payroll Recon Python\Recordkeeping.csv",skiprows=[0],usecols=[0,1,2,3,6,7,9],
+                               names=["Contract","Member_ID","Effective_Date","Pay_Period",
+                                      "Contribution_Type","Submission_Amount","Submission_ID"])
+rawRecordkeeping["Submission_Amount"] = pd.to_numeric(rawRecordkeeping["Submission_Amount"])
+#recordkeeping columns Contract	Member ID	Effective Date	Pay Period	Transaction Type	
+#Contribution ID	Contribution Type	Submission Amount	Request	Submission ID
+dfRecordkeeping = pd.DataFrame(rawRecordkeeping)
+dfCompare = pd.merge(dfCompare,dfRecordkeeping,on=parameters,how='outer')
+dfCompare["Submission_Amount"].fillna(0,inplace = True)
+dfCompare["Recordkeeping Comparison"] = (dfCompare["Submission_Amount_y"] + dfCompare["MOF_Amount_y"]) - dfCompare["Submission_Amount"]
 dfFinalResult = pd.DataFrame()
 dfFinalResult["Contract"] = dfCompare["Contract"]
 dfFinalResult["Member ID"] = dfCompare["Member_ID"]
@@ -35,7 +46,9 @@ dfFinalResult["Original Submission Amount"] = dfCompare["Submission_Amount_x"]
 dfFinalResult["Final Submission Amount"] = dfCompare["Submission_Amount_y"]
 dfFinalResult["Final MOF Amount"] = dfCompare["MOF_Amount_y"]
 dfFinalResult["Original vs Final"] = dfCompare["Amount Difference"]
-dfFinalResult["In Both Tables"] = dfCompare["Both Spreadsheets"]
-dfFinalResult = dfFinalResult[dfFinalResult["Original vs Final"] != 0]
+dfFinalResult["In Submission Tables"] = dfCompare["Both Spreadsheets"]
+dfFinalResult["Recordkeeping"] = dfCompare["Submission_Amount"]
+dfFinalResult["Recordkeeping Comparison"] = dfCompare["Recordkeeping Comparison"]
+dfFinalResult = dfFinalResult[dfFinalResult["Recordkeeping Comparison"] != 0]
 dfCompare.to_csv(r"C:\Users\khaaa\OneDrive\Desktop\Payroll Recon Python\Raw Test.csv")
 dfFinalResult.to_csv(r"C:\Users\khaaa\OneDrive\Desktop\Payroll Recon Python\Formatted Test.csv",index=False)
