@@ -1,0 +1,41 @@
+import pandas as pd
+import numpy as np
+
+originalSubmission = pd.read_csv(r"C:\Users\khaaa\OneDrive\Desktop\Payroll Recon Python\Original Submission Amount.csv",skiprows=[0],usecols=[0,1,3,4,8,9,10,11,13],
+                              names=["Contract","Submission_ID","Pay_Period","Member_ID","Contribution_Type","Submission_Type","Submission_Amount",
+                                     "MOF_Amount","Effective_Date"])
+dfOriginal = pd.DataFrame(originalSubmission)
+dfOriginal["Submission_Amount"] = pd.to_numeric(dfOriginal["Submission_Amount"])
+dfOriginal["MOF_Amount"] = pd.to_numeric(dfOriginal["MOF_Amount"])
+finalSubmission = pd.read_csv(r"C:\Users\khaaa\OneDrive\Desktop\Payroll Recon Python\Final Submission Amount.csv",skiprows=[0],usecols=[0,1,3,4,8,9,10,11,13],
+                              names=["Contract","Submission_ID","Pay_Period","Member_ID","Contribution_Type","Submission_Type","Submission_Amount",
+                                     "MOF_Amount","Effective_Date"])
+dfFinal = pd.DataFrame(finalSubmission)
+dfFinal["Submission_Amount"] = pd.to_numeric(dfFinal["Submission_Amount"])
+parameters = ["Contract","Pay_Period","Member_ID","Contribution_Type","Effective_Date","Submission_ID"]
+dfCompare = pd.merge(dfOriginal,dfFinal,on=parameters,how='outer')
+dfCompare["Amount Difference"] = (dfCompare["MOF_Amount_x"] + dfCompare["Submission_Amount_x"]) - (dfCompare["MOF_Amount_y"] + dfCompare["Submission_Amount_y"])
+dfCompare["Both Spreadsheets"] = np.where(dfCompare["Amount Difference"].isnull(), "Is Not Present", "Is Present")
+dfCompare["Submission_Amount_x"].fillna(0,inplace = True)
+dfCompare["Submission_Amount_y"].fillna(0, inplace = True)
+dfCompare["MOF_Amount_x"].fillna(0, inplace = True)
+dfCompare["MOF_Amount_y"].fillna(0, inplace = True)
+dfCompare["Amount Difference"] = (dfCompare["MOF_Amount_x"] + dfCompare["Submission_Amount_x"]) - (dfCompare["MOF_Amount_y"] + dfCompare["Submission_Amount_y"])
+#dfCompare columns: Submission_ID	Pay_Period	Member_ID	Contribution_Type	
+#Submission_Type_x	Submission_Amount_x	MOF_Amount_x	Effective_Date	Submission_Type_y	
+#Submission_Amount_y	MOF_Amount_y	Amount Difference	Both Spreadsheets
+dfFinalResult = pd.DataFrame()
+dfFinalResult["Contract"] = dfCompare["Contract"]
+dfFinalResult["Member ID"] = dfCompare["Member_ID"]
+dfFinalResult["Submission ID"] = dfCompare["Submission_ID"]
+dfFinalResult["Pay Period"] = dfCompare["Pay_Period"]
+dfFinalResult["Effective Date"] = dfCompare["Effective_Date"]
+dfFinalResult["Contribution Type"] = dfCompare["Contribution_Type"]
+dfFinalResult["Original Submission Amount"] = dfCompare["Submission_Amount_x"]
+dfFinalResult["Final Submission Amount"] = dfCompare["Submission_Amount_y"]
+dfFinalResult["Final MOF Amount"] = dfCompare["MOF_Amount_y"]
+dfFinalResult["Original vs Final"] = dfCompare["Amount Difference"]
+dfFinalResult["In Both Tables"] = dfCompare["Both Spreadsheets"]
+dfFinalResult = dfFinalResult[dfFinalResult["Original vs Final"] != 0]
+dfCompare.to_csv(r"C:\Users\khaaa\OneDrive\Desktop\Payroll Recon Python\Raw Test.csv")
+dfFinalResult.to_csv(r"C:\Users\khaaa\OneDrive\Desktop\Payroll Recon Python\Formatted Test.csv",index=False)
