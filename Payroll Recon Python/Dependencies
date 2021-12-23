@@ -2,3 +2,4 @@ Numpy
 Pandas
 SQLAlchemy
 Setuptools - included with Python3 typically
+PyODBC
