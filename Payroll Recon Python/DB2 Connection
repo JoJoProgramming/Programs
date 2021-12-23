@@ -1,4 +1,7 @@
-userID = input("What is your user ID? ")
-userPW = input("What is your password? ")
-userContract = input("What is your contract number? ")
-db.connect("DATABASE=DB2PRODA;HOSTNAME=host;PORT=12345;PROTOCOL=TCIP;UID=" + userID +";PWD=" + userPW + ";, "", ")
+import pyodbc as odbc
+
+def conn():
+    conn = odbc.connect('Driver = { ----};' #sensitive data, only enter on PFG side
+                        'Server = ----;' #unsure what server name/data base name are. ----?
+                        'Database = ----;'
+                        'Trusted_Connection = yes;')
