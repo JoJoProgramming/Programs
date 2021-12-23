@@ -1,0 +1,27 @@
+import sys
+def userContractPrefix():
+    validPrefix = ('3','4','5','6','7','8')
+    userContractPrefixInput = input("Please provide the contract prefix: ")
+    userContractPrefixInput = userContractPrefixInput.replace(' ','')
+    i = 0
+    while userContractPrefixInput not in validPrefix and i >= 5:
+        i += 1
+        if i = 5:
+            sys.exit("This program will terminate for security, please try again.")
+        userContractPrefixInput = input("This value is incorrect, please provide the contract prefix: ")
+    return userContractPrefixInput
+def userContractNumber():
+    userContractNumberInput = input("Please provide the 5 digit contract code: ")
+    userContractNumberInput = userContractNumberInput.replace(' ','')
+    userContractNumberValidation = 0
+    i = 0
+    while userContractNumberValidation == 0 and i >= 5:
+        try:
+            int(userContractNumberInput)
+            userContractNumberValidation = 1
+            return int(userContractNumberInput)
+        except:
+            userContractNumberInput = input("This value is incorrect, please provide the 5 digit contract number: ")
+            i += 1
+            if i = 5:
+                sys.exit("This program will terminate for security, please try again.")
