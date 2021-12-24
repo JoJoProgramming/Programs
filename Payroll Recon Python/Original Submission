@@ -2,5 +2,9 @@ import ODBC_CONN as conn
 import pandas as pd
 import numpy as np
 import User_Contract as uc
+import Conceptual_Recon as cr
 
-osdf = pd.read_sql_query(#sensitive data, only enter on PFG side)
+osdf = pd.read_sql_query('SELECT DISCTINT * 
+                        FROM DB2.REQUEST
+                        WHERE CONTRACT_PREFIX =''' + cr.validPrefix + '''
+                        AND CONTRACT_NMBR = ''' + cr.validContract + '')
