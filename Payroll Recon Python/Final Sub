@@ -1,0 +1,7 @@
+import pandas as pd
+import Conceptual_Recon as cr
+
+fsdf = pd.read_sql_query('SELECT DISCTINT * 
+                        FROM DB2.REQUEST_FNL
+                        WHERE CONTRACT_PREFIX =''' + cr.validPrefix + '''
+                        AND CONTRACT_NMBR = ''' + cr.validContract + '')
