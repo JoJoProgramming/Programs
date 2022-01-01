@@ -1,0 +1,41 @@
+#import tkinter as tk
+#import pandas as pd
+#import numpy as np
+import Utility as util
+loginWindow = util.tk.Tk()
+#creating immutable text
+payrollReconLabel = util.tk.Label(loginWindow,text="Money In Payroll Recon").grid(column=0,row=0)
+userIDLabel = util.tk.Label(loginWindow,text="User ID:",anchor="e",width=12).grid(column=0,row=1)
+userPWLabel = util.tk.Label(loginWindow,text="User password:",anchor="e",width=12).grid(column=0,row=2)
+userIDField = util.tk.Entry(loginWindow)
+userIDField.grid(row=1,column=1)
+userPWField = util.tk.Entry(loginWindow,show='*')
+userPWField.grid(row=2,column=1)
+userPWField.bind('<Control-x>',lambda e: 'break')
+userPWField.bind('<Control-c>',lambda e: 'break')
+userPWField.bind('<Control-v>',lambda e: 'break')
+userPWField.bind('<Button-3>',lambda e: 'break')
+def userLoginValidation():
+    uidInput = userIDField.get()
+    upwInput = userPWField.get()
+    if util.userUIDValidator(uidInput) == False or util.userPWValidation(upwInput) == False:
+        return False
+    else:
+        return True
+buttonWait = util.tk.IntVar()
+loginButton = util.tk.Button(loginWindow,text="Login",command=lambda: [userLoginValidation(),buttonWait.set(1)]).grid(column=1,row=3,padx=100)
+loginWindow.wait_variable(buttonWait)
+#program currently breaking if input is invalid
+if userLoginValidation() == False:
+    userIDLabelInvalid = util.tk.Label(loginWindow,text="Input is invalid, please try again.").grid(column=1,row=4)
+    buttonWait.set(0)
+else:
+    loginWindow.destroy()
+    #pass uidInput and upwInput variables into ODBC_CONN.py once input is validated.
+    criteriaWindow = util.tk.Tk()
+    payrollReconLabel = util.tk.Label(criteriaWindow,text="Money In Payroll Recon").grid(column=0,row=0)
+    payrollReconLabel = util.tk.Label(criteriaWindow,text="Criteria Selection").grid(column=1,row=0)
+    contractLabel = util.tk.Label(text="6 digit contract numbr:",anchor='e').grid(column=0,row=1)
+    contractField = util.tk.Entry(criteriaWindow)
+    contractField.grid(column=2,row=1)
+loginWindow.mainloop()
