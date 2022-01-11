@@ -1,3 +1,0 @@
-def spaceReplace(x):
-    x = x.relace(' ','')
-    return x
